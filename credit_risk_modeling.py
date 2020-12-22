@@ -11,6 +11,8 @@ from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.metrics import roc_auc_score
 
+from imblearn.over_sampling import SMOTE
+
 import pickle
 
 
@@ -69,6 +71,11 @@ file_features = open('./data/features.pickle', 'wb')
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=100, stratify=y) # stratify=y 按原數據y中各類比例
 
+# over sampling training set
+method = SMOTE(kind='regular')
+X_train_resampled, y_train_resampled = method.fit_sample(X_train, y_train)
+
+
 ###### set up XGBoost Pipeline & GridSearch ######
 xgb_pipeline = Pipeline(steps=[("st_scaler", StandardScaler()), 
                                ("pca", PCA(n_components = 0.95)), #'mle' (自動找)
@@ -93,7 +100,7 @@ grid_search_roc = GridSearchCV(estimator= xgb_pipeline,
 
 
 
-grid_search_roc.fit(X_train, y_train)
+grid_search_roc.fit(X_train_resampled, y_train_resampled)
 print(grid_search_roc.best_params_)
 print(grid_search_roc.best_score_)
 
@@ -128,7 +135,7 @@ print('Test set ROC AUC score: {:.4f}'.format(roc_auc))
 ###### feature importance ######
 ### build-in plot ### 
 #for PCA included pipeline
-xgb.plot_importance(grid_search_roc.best_estimator_.named_steps["xgb_model"])
+xgb.plot_importance(grid_search_roc.best_estimator_.named_steps["xgb_model"], importance_type='weight')
 #plt.savefig('./data/ft_importance_20200701.png', dpi=200, bbox_inches='tight', pad_inches=1)
 plt.show() 
 
