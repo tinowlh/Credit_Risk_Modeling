@@ -72,7 +72,7 @@ file_features = open('./data/features.pickle', 'wb')
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=100, stratify=y) # stratify=y 按原數據y中各類比例分層抽樣
 
 # over sampling training set
-method = SMOTE(kind='regular')
+method = SMOTE(random_state=100)
 X_train_resampled, y_train_resampled = method.fit_sample(X_train, y_train)
 
 
