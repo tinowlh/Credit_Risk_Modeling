@@ -63,6 +63,5 @@ shap_values = explainer.shap_values(X_train)
 shap.summary_plot(shap_values, X_train)
 
 # Local interpretability for single data point
-#shap.initjs()
 shap.force_plot(explainer.expected_value, shap_values[10,:], X_train.iloc[10,:], matplotlib=True)
 
