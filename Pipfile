@@ -12,6 +12,7 @@ xgboost = "*"
 scikit-learn = "*"
 xlrd = "*"
 imbalanced-learn = "*"
+shap = "*"
 
 [dev-packages]
 
