@@ -11,26 +11,9 @@ df_raw = pd.read_excel('dataset_default_of_credit_card.xls')
 
 ###### Preprocess ######
 df = df_raw.copy()
-
-# change datatype
-df = df.astype({'ID': 'str', 
-           'SEX': 'category', 
-           'EDUCATION': 'category',
-           'PAY_0': 'category',
-           'PAY_2': 'category',
-           'PAY_3': 'category',
-           'PAY_4': 'category',
-           'PAY_5': 'category',
-           'PAY_6': 'category',
-           'default payment next month': 'category'
-           })
-
-
 df.info()
 
 X = df.iloc[:,1:-1]
-X = pd.get_dummies(X)
-
 y = df.iloc[:,-1]
 
 
@@ -44,7 +27,11 @@ d_test = xgb.DMatrix(X_test, y_test)
 
 # modeling
 watchlist = [(d_train, "train"), (d_test, "test")]
-params = {'n_estimators': 500, 'max_depth': 3}
+params = {'booster':'gbtree',
+         'objective': 'binary:logistic',
+         'eval_metric': 'auc',
+         'n_estimators': 500, 
+         'max_depth': 3}
 model = xgb.train(params, d_train, num_boost_round=2000, evals=watchlist, 
                       early_stopping_rounds=100, verbose_eval=10)
 
@@ -63,5 +50,5 @@ shap_values = explainer.shap_values(X_train)
 shap.summary_plot(shap_values, X_train)
 
 # Local interpretability for single data point
-shap.force_plot(explainer.expected_value, shap_values[10,:], X_train.iloc[10,:], matplotlib=True)
+shap.force_plot(explainer.expected_value, shap_values[100,:], X_train.iloc[100,:], matplotlib=True)
 
