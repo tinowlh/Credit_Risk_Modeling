@@ -43,6 +43,7 @@ df.info()
 des = df.describe()
 corrmat = df.corr()
 cov = df.cov()
+df['default payment next month'].value_counts()
 
 pd.crosstab(df['SEX'], df['default payment next month'], margins = True)
 pd.crosstab(df['MARRIAGE'], df['default payment next month'], margins = True)
@@ -60,6 +61,7 @@ plt.show()
 
 X = df.iloc[:,1:-1]
 y = df.iloc[:,-1]
+
 
 # Save features (for production use)
 features = X.columns.tolist()
