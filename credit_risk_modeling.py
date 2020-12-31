@@ -141,9 +141,9 @@ plt.show()
 
 
 ##Save model/pipeline###
-file_pipeline = open('./data/xgb_pipeline_v1.0', 'wb')
-#pickle.dump(xgbc_best, file_pipeline)
-file_pipeline.close()
+with open('./data/xgb_pipeline_v1.0', 'wb') as f: 
+    pickle.dump(xgbc_best, f)
+
 
 
 
